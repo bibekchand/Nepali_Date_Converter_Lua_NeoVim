@@ -21,9 +21,35 @@ local function convert_to_bs(given_year, given_month, given_day)
         end
     end
 end
-local english_date = os.date("*t")
-local year = convert_to_bs(english_date.year, english_date.month, english_date.day)
+local english_date  = os.date("*t")
+local year          = convert_to_bs(english_date.year, english_date.month, english_date.day)
 local nepali_months = {
     "Baisakh", "Jestha", "Asar", "Shrawan", "Bhadra", "Asoj", "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"
 }
+
+local height        = 20
+local width         = 60
+local row           = math.floor((vim.o.lines - height) / 2)
+local col           = math.floor((vim.o.columns - width) / 2)
+local options       = {
+    style = "minimal",
+    relative = "editor",
+    row = row,
+    col = col,
+    width = width,
+    height = height,
+    bufpos = { 100, 10 }
+}
+if year.month == 1 and year.day == 1 then
+vim.schedule(
+    function()
+        local buf            = vim.api.nvim_create_buf(false, true)
+        vim.bo[buf].readonly = true
+        vim.api.nvim_open_win(buf, true, options)
+        vim.api.nvim_buf_set_lines(buf, 0, 0, false, {
+            "Happy Nepali New Year🇳🇵"
+        })
+    end
+)
+end
 return { month = nepali_months[year.month], year = year.year, day = year.day }
